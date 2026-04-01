@@ -44,7 +44,7 @@ Masar.AI combines machine learning clustering and map-based directions to propos
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-org/masar-ai.git
+git clone https://github.com/wekt2k04/Masar.AI-MVP
 cd masar-ai
 ```
 
