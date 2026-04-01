@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masar.AI - Routeur Touristique Évolutif</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+    
+    <style>
+        body { margin: 0; padding: 0; background-color: #111827; color: white; overflow: hidden; }
+        #map { width: 100%; height: 100vh; }
+        
+        /* Animation de chargement pour la route */
+        .pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+    </style>
+</head>
+<body class="flex">
+
+    <div id="app" class="flex w-full h-screen">
+        
+        <div class="w-1/4 bg-gray-900 border-r border-gray-700 p-6 flex flex-col z-10 shadow-2xl overflow-y-auto">
+            <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 mb-2">
+                Masar.AI
+            </h1>
+            <p class="text-gray-400 text-sm mb-8">Intelligence Évolutive pour Routes Mémorielles</p>
+
+            <label class="block text-sm font-medium text-gray-300 mb-2">Thématique du Circuit :</label>
+            <select v-model="selectedTheme" class="w-full bg-gray-800 text-white border border-gray-600 rounded-lg p-3 mb-6 outline-none">
+                <option value="Resistance">Résistance & Mémoire</option>
+                <option value="Royal_Visits">Visites Royales Historiques</option>
+                <option value="Intangible_Heritage">Ksour & Patrimoine Immatériel</option>
+                <option value="Commercial_Caravan">Artisanat & Routes Commerciales</option>
+            </select>
+
+            <button @click="generateRoute" :disabled="isGenerating" class="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 shadow-lg mb-8">
+                {{ isGenerating ? 'Calcul GPS en cours...' : 'Générer la Nouvelle Route' }}
+            </button>
+
+            <div v-if="routeDistance > 0" class="bg-gray-800 rounded-lg p-4 mb-6 border border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                <h3 class="text-xs text-gray-400 uppercase tracking-wider mb-1">Résumé du Circuit</h3>
+                <p class="text-3xl font-bold text-emerald-400">{{ (routeDistance / 1000).toFixed(0) }} <span class="text-sm">km</span></p>
+                <p class="text-sm text-white mt-1">⏱️ Conduite estimée : <span class="font-bold">{{ formatDuration(routeDuration) }}</span></p>
+            </div>
+
+            <div v-if="routeStops.length > 0" class="flex-1 pr-2">
+                <h3 class="text-lg font-semibold mb-4 text-emerald-400">Itinéraire Optimisé</h3>
+                <div v-for="(stop, index) in routeStops" :key="index" class="bg-gray-800 rounded-lg p-3 mb-3 border-l-4 border-blue-500">
+                    <p class="font-bold text-sm">{{ index + 1 }}. {{ stop.site_name }}</p>
+                    <p class="text-xs text-gray-400 mt-1">Durée: {{ stop.visit_duration_mins }} min | Impact: {{ stop.economic_value_mad }} MAD</p>
+                </div>
+            </div>
+            
+            <div class="mt-auto pt-4 text-xs text-gray-500 text-center">
+                Hackathon CRI Marrakech-Safi - MVP
+            </div>
+        </div>
+
+        <div class="w-3/4 relative">
+            <div v-if="isGenerating" class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50 pulse">
+                <span class="text-2xl font-bold text-emerald-400">Génération du tracé routier...</span>
+            </div>
+            <div id="map"></div>
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+        createApp({
+            data() {
+                return {
+                    selectedTheme: 'Resistance',
+                    isGenerating: false,
+                    routeStops: [],
+                    routeDistance: 0,
+                    routeDuration: 0,
+                    map: null,
+                    markers: []
+                }
+            },
+            mounted() {
+                // /!\ TON TOKEN MAPBOX ICI /!\
+                this.mapboxToken = 'TON_TOKEN_MAPBOX';
+                mapboxgl.accessToken = this.mapboxToken;
+                
+                this.map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/dark-v11',
+                    center: [-8.5, 30.5],
+                    zoom: 5
+                });
+            },
+            methods: {
+                async generateRoute() {
+                    this.isGenerating = true;
+                    this.clearMap();
+
+                    try {
+                        // 1. Appel au VRAI Cerveau Python (API locale)
+                        const response = await fetch('http://127.0.0.1:8000/api/route?theme=' + this.selectedTheme);
+                        
+                        if (!response.ok) throw new Error("Le serveur Python ne répond pas.");
+                        
+                        // 2. Récupération des données venant du CSV !
+                        this.routeStops = await response.json();
+
+                        if (this.routeStops.length === 0) {
+                            alert("Aucun site trouvé pour cette thématique dans le CSV.");
+                            this.isGenerating = false;
+                            return;
+                        }
+
+                        // 3. Tracé Mapbox
+                        await this.drawRealRoadRoute(this.routeStops);
+
+                    } catch (error) {
+                        console.error("Erreur API :", error);
+                        alert("Assure-toi que le serveur Python uvicorn est lancé !");
+                    } finally {
+                        this.isGenerating = false;
+                    }
+                },
+
+                async drawRealRoadRoute(stops) {
+                    // Placer les points (Marqueurs)
+                    stops.forEach((stop, index) => {
+                        const el = document.createElement('div');
+                        el.className = 'w-4 h-4 bg-emerald-400 rounded-full border-2 border-gray-900 shadow-[0_0_15px_rgba(52,211,153,0.8)]';
+                        
+                        const marker = new mapboxgl.Marker(el)
+                            .setLngLat([stop.longitude, stop.latitude])
+                            .setPopup(new mapboxgl.Popup({ offset: 25 })
+                                .setHTML(`<div class="text-black font-bold p-1">${index + 1}. ${stop.site_name}</div>`))
+                            .addTo(this.map);
+                        this.markers.push(marker);
+                    });
+
+                    // Construire la requête pour l'API Directions de Mapbox
+                    // Format: lon1,lat1;lon2,lat2;lon3,lat3...
+                    const coordinatesString = stops.map(stop => `${stop.longitude},${stop.latitude}`).join(';');
+                    
+                    try {
+                        // Appel à l'API gratuite Mapbox Directions (profil driving/voiture)
+                        const query = await fetch(
+                            `https://api.mapbox.com/directions/v5/mapbox/driving/${coordinatesString}?geometries=geojson&access_token=${this.mapboxToken}`
+                        );
+                        const data = await query.json();
+                        
+                        if (!data.routes || data.routes.length === 0) {
+                            console.error("Aucune route trouvée");
+                            return;
+                        }
+
+                        // Récupérer le tracé exact de la route
+                        const routeGeoJSON = data.routes[0].geometry;
+
+                        // Récupération des métriques réelles Mapbox
+                        this.routeDistance = data.routes[0].distance; // en mètres
+                        this.routeDuration = data.routes[0].duration; // en secondes
+
+                        // Dessiner la vraie route sur la carte
+                        this.map.addSource('route', {
+                            'type': 'geojson',
+                            'data': {
+                                'type': 'Feature',
+                                'properties': {},
+                                'geometry': routeGeoJSON
+                            }
+                        });
+
+                        this.map.addLayer({
+                            'id': 'route',
+                            'type': 'line',
+                            'source': 'route',
+                            'layout': { 'line-join': 'round', 'line-cap': 'round' },
+                            'paint': { 'line-color': '#34d399', 'line-width': 4 } // Ligne émeraude continue
+                        });
+
+                        // Centrer la caméra
+                        const bounds = stops.reduce((b, stop) => b.extend([stop.longitude, stop.latitude]), new mapboxgl.LngLatBounds([stops[0].longitude, stops[0].latitude], [stops[0].longitude, stops[0].latitude]));
+                        this.map.fitBounds(bounds, { padding: 100, maxZoom: 7 });
+
+                    } catch (error) {
+                        console.error("Erreur lors de la récupération de la route GPS :", error);
+                        alert("Erreur de connexion à l'API de routage.");
+                    }
+                },
+
+                clearMap() {
+                    this.markers.forEach(m => m.remove());
+                    this.markers = [];
+                    if (this.map.getLayer('route')) this.map.removeLayer('route');
+                    if (this.map.getSource('route')) this.map.removeSource('route');
+                },
+
+                formatDuration(seconds) {
+                    const hours = Math.floor(seconds / 3600);
+                    const minutes = Math.floor((seconds % 3600) / 60);
+                    return `${hours}h ${minutes}min`;
+                },
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

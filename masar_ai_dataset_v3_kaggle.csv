@@ -1,0 +1,51 @@
+id,site_name,latitude,longitude,primary_theme,visit_duration_mins,economic_value_mad,accessibility_score
+1,Place Djemaa El-Fna - Marrakech,31.6258,-7.9892,Commercial_Caravan,120,350,5.0
+2,Musée de la Résistance - Marrakech,31.6349,-7.9817,Resistance,90,150,5.0
+3,Mellah Historique de Marrakech,31.6218,-7.9836,Intangible_Heritage,75,80,4.8
+4,Souk des Teinturiers Chouara - Marrakech,31.6314,-7.9832,Commercial_Caravan,60,500,4.9
+5,Palais de la Bahia - Marrakech,31.6212,-7.9834,Intangible_Heritage,90,70,4.9
+6,Monument de l'Indépendance - Marrakech,31.6289,-7.9971,Royal_Visits,45,0,5.0
+7,Tombeaux Saadiens - Marrakech,31.6197,-7.9896,Intangible_Heritage,60,70,4.8
+8,Ksar Aït Ben Haddou,31.0473,-7.1329,Intangible_Heritage,150,200,3.5
+9,Médina Ancienne de Safi,32.2994,-9.2372,Intangible_Heritage,120,90,4.8
+10,Poteries de Safi - Quartier des Artisans,32.2875,-9.2411,Commercial_Caravan,75,450,4.7
+11,Château de Mer (Qasr Al-Bahr) - Safi,32.3023,-9.2378,Resistance,90,60,4.9
+12,Port Historique de Safi,32.3089,-9.2501,Commercial_Caravan,60,300,4.8
+13,Musée National de la Céramique - Safi,32.2941,-9.2389,Intangible_Heritage,75,100,4.8
+14,Coopérative Artisanale de Safi,32.2867,-9.2356,Commercial_Caravan,90,600,4.7
+15,Place de la Résistance - Dcheira El Jihadia,30.3833,-9.6000,Resistance,60,0,4.9
+16,Monument de la Bataille de Dcheira,30.3912,-9.5978,Resistance,45,0,4.8
+17,Mémorial des Martyrs de Dcheira,30.3789,-9.6041,Resistance,50,0,4.8
+18,Stèle Commémorative de Dcheira,30.3856,-9.6019,Resistance,30,0,4.7
+19,Ancienne Kasbah d'Agadir Oufella,30.4278,-9.5981,Resistance,90,50,3.8
+20,Mémorial du Séisme d'Agadir,30.4202,-9.5982,Resistance,60,30,4.9
+21,Souk de Biougra - Axe Agadir-Sud,30.2131,-8.9467,Commercial_Caravan,60,280,4.6
+22,Tiznit - Remparts de la Cité Historique,29.6981,-9.7319,Intangible_Heritage,90,50,4.5
+23,Bijouterie et Souk de Tiznit,29.6997,-9.7283,Commercial_Caravan,75,550,4.6
+24,Guelmim - Souk des Dromadaires,28.9875,-10.0572,Commercial_Caravan,90,320,4.4
+25,Ksar Aït Bekkou - Guelmim,29.0142,-10.0319,Intangible_Heritage,75,60,3.9
+26,Caravansérail de Zagora,30.3322,-5.8378,Commercial_Caravan,90,200,3.8
+27,Ksar de Zagora - Remparts Sahariens,30.3289,-5.8412,Intangible_Heritage,120,80,3.7
+28,Oasis de M'Hamid El Ghizlane,29.8198,-5.7163,Intangible_Heritage,120,150,2.5
+29,Ksar Central de M'Hamid El Ghizlane,29.8242,-5.7194,Royal_Visits,150,120,2.4
+30,Site de la Visite Royale SM Mohammed V - M'Hamid,29.8219,-5.7228,Royal_Visits,180,0,2.3
+31,Stèle Commémorative Mohammed V - M'Hamid,29.8267,-5.7187,Royal_Visits,60,0,2.4
+32,Dunes de Erg Chegaga - Porte du Désert,29.6572,-5.5947,Intangible_Heritage,180,400,1.5
+33,Bivouac Traditionnel Saharien - Erg Chegaga,29.6389,-5.6112,Intangible_Heritage,240,700,1.2
+34,Palais Royal de Laâyoune,27.1567,-13.2033,Royal_Visits,90,0,5.0
+35,Place Mechouar de Laâyoune,27.1589,-13.2012,Royal_Visits,60,0,5.0
+36,Monument de la Marche Verte - Laâyoune,27.1612,-13.1978,Royal_Visits,75,0,5.0
+37,Mosquée Royale de Laâyoune,27.1601,-13.2056,Royal_Visits,45,0,5.0
+38,Musée Régional du Sahara - Laâyoune,27.1543,-13.1989,Resistance,90,80,4.9
+39,Anciens Bivouacs Sahraouis - Laâyoune,27.1478,-13.2211,Intangible_Heritage,60,100,3.8
+40,Marché Central de Laâyoune,27.1521,-13.2034,Commercial_Caravan,75,380,4.9
+41,Palais de Ma El Aïnine - Smara,26.7311,-11.6758,Resistance,120,50,3.2
+42,Grande Mosquée de Smara,26.7289,-11.6742,Intangible_Heritage,75,0,3.3
+43,Stèle de la Résistance Saharienne - Smara,26.7334,-11.6779,Resistance,45,0,3.2
+44,Oasis et Puits Historiques de Smara,26.7256,-11.6801,Intangible_Heritage,90,60,3.1
+45,Site Archéologique de la Caravane - Smara,26.7378,-11.6712,Commercial_Caravan,75,90,2.9
+46,Front de Mer de Boujdour,26.1261,-14.4850,Resistance,60,40,3.8
+47,Phare Historique de Cabo Bojador,26.1289,-14.4978,Intangible_Heritage,90,30,3.6
+48,Monument de l'Évacuation - Boujdour,26.1312,-14.4821,Royal_Visits,75,0,3.8
+49,Marché des Pêcheurs - Boujdour,26.1234,-14.4867,Commercial_Caravan,45,250,3.7
+50,Plaine de Tan-Tan - Espace des Caravanes,28.4378,-11.1022,Commercial_Caravan,120,180,2.8
